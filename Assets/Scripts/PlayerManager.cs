@@ -44,8 +44,7 @@ public class PlayerManager : MonoBehaviour
     private IEnumerator Shoot()
     {
         isCoroutineRuninng = true;
-        if (isCoroutineRuninng)
-        {
+
             RocketController bullet = bullets.GetPooledObject();
             GameObject target = targets.GetPooledObject();
             Vector3 targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -60,9 +59,8 @@ public class PlayerManager : MonoBehaviour
                 bullet.transform.position = transform.position;
                 bullet.gameObject.SetActive(true);
                 yield return new WaitForSeconds(1);
-                isCoroutineRuninng = false;
-        }
-        }
+            }
+        isCoroutineRuninng = false;
     }
         private void OnCollisionEnter(Collision collision)
     {
