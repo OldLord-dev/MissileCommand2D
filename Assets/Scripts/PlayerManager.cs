@@ -16,8 +16,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField]
     ParticleSystem particle;
 
-
-
+    bool isCoroutineRuninng;
 
 
     void Start()
@@ -28,8 +27,24 @@ public class PlayerManager : MonoBehaviour
     void Update()
     {
         horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
-
         if (Input.GetMouseButtonDown(0))
+        {
+            if (!isCoroutineRuninng)
+                   StartCoroutine(Shoot());
+        }
+
+
+    }
+    private void FixedUpdate()
+    {
+        controller.Move(horizontalMove * Time.fixedDeltaTime,false,false);
+
+    }
+
+    private IEnumerator Shoot()
+    {
+        isCoroutineRuninng = true;
+        if (isCoroutineRuninng)
         {
             RocketController bullet = bullets.GetPooledObject();
             GameObject target = targets.GetPooledObject();
@@ -44,15 +59,12 @@ public class PlayerManager : MonoBehaviour
                 bullet.targetCursor = target;
                 bullet.transform.position = transform.position;
                 bullet.gameObject.SetActive(true);
-            }
+                yield return new WaitForSeconds(1);
+                isCoroutineRuninng = false;
+        }
         }
     }
-    private void FixedUpdate()
-    {
-        controller.Move(horizontalMove * Time.fixedDeltaTime,false,false);
-    }
-
-    private void OnCollisionEnter(Collision collision)
+        private void OnCollisionEnter(Collision collision)
     {
         particle.Play();
     }
